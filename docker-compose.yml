@@ -1,0 +1,9 @@
+airflow:
+  image: puckel/docker-airflow
+  ports:
+    - 8080:8080
+  command: webserver
+  environment:
+    - AIRFLOW__CORE__FERNET_KEY=f8qhkvGQbO8CwTDNn2sVCwaxVRjnRYreMQ02goLBVRU=
+  volumes:
+    - ./airflow:/usr/local/airflow/dags
