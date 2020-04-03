@@ -1,7 +1,8 @@
-from datetime import datetime
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
+
+from datetime import datetime
 
 default_args = {
     'owner': 'bikzar',
@@ -11,7 +12,6 @@ default_args = {
 dag = DAG(
     'my_simple_dag',
     default_args=default_args,
-    schedule_interval='* */20 * * *',
 )
 
 
@@ -24,4 +24,3 @@ task_1 = PythonOperator(
     python_callable=print_current_date,
     dag=dag,
 )
-
