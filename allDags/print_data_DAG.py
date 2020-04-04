@@ -26,6 +26,7 @@ class FromExcelToCsvParser(BaseOperator):
         if os.path.exists(self.xls_file):
             excel_file = pd.read_excel(self.xls_file)  # Can fail if file not Excel type
             excel_file.to_csv(self.csv_file, index=False)
+            os.remove(self.xls_file)
             print("File has been successfully written to {}".format(self.csv_file))
         else:
             raise FileNotFoundError("File not found: {}".format(self.xls_file))
