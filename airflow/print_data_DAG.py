@@ -3,7 +3,6 @@ from airflow.operators.python_operator import BaseOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.utils.dates import days_ago
 from airflow.utils.decorators import apply_defaults
-from airflow.utils.state import State
 
 from datetime import datetime
 
@@ -20,21 +19,17 @@ class FromExcelToCsvParser(BaseOperator):
             *args,
             **kwargs):
         super().__init__(*args, **kwargs)
-        self.__xls_file = xls_file
-        self.__csv_file = csv_file
+        self.xls_file = xls_file
+        self.csv_file = csv_file
 
     def execute(self, context):
-        if os.path.exists(self.__xls_file):
-            excel_file = pd.read_excel(self.__xls_file)  # Can fail if file not Excel type
-            excel_file.to_csv(self.__csv_file, index=False)
-            print("File has been successfully written to {}".format(self.__csv_file))
+        if os.path.exists(self.xls_file):
+            excel_file = pd.read_excel(self.xls_file)  # Can fail if file not Excel type
+            excel_file.to_csv(self.csv_file, index=False)
+            print("File has been successfully written to {}".format(self.csv_file))
         else:
-            print("File not found: {}".format(self.__xls_file))
-            context['dag'].set_dag_runs_state(State.FAILED)
+            raise FileNotFoundError("File not found: {}".format(self.xls_file))
 
-
-EXCEL_FILE_PATH = '/home/excel/input.xlsx'
-CSV_FILE_PATH = '/home/csv/output.csv'
 
 default_args = {
     'owner': 'bikzar',
@@ -54,8 +49,8 @@ with DAG('my_simple_dag', default_args=default_args) as dag:
 
     task_2 = FromExcelToCsvParser(
         task_id='pars_excel_to_file',
-        xls_file=EXCEL_FILE_PATH,
-        csv_file=CSV_FILE_PATH,
+        xls_file='/home/excel/input.xlsx',
+        csv_file='/home/csv/output.csv',
     )
 
 task_1 >> task_2
