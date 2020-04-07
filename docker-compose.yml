@@ -6,6 +6,6 @@ airflow:
   environment:
     - AIRFLOW__CORE__FERNET_KEY=f8qhkvGQbO8CwTDNn2sVCwaxVRjnRYreMQ02goLBVRU=
   volumes:
-    - ./allDags:/usr/local/airflow/dags
+    - ./dag:/usr/local/airflow/dags
     - ./input:/home/excel
     - ./output:/home/csv
